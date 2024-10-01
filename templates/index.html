@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузка файлов</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Загрузка файлов</h1>
+    </header>
+
+    <section>
+        <form id="uploadForm" method="post" enctype="multipart/form-data" aria-label="Форма загрузки файлов">
+            <!-- Зона выбора и перетаскивания файлов -->
+            <div class="file-upload">
+                <!-- Скрытое поле для выбора файлов -->
+                <input type="file" id="fileInput" name="files" multiple accept="image/*,application/pdf" style="display: none;">
+                <div id="drop-zone" class="drop-zone" role="button" aria-label="Перетащите файлы или выберите файлы">
+                    <p>Перетащите файлы сюда или нажмите, чтобы выбрать файлы с вашего устройства</p>
+                </div>
+            </div>
+
+            <!-- Список выбранных файлов -->
+            <div class="file-list" aria-live="polite">
+                <h2>Выбранные файлы:</h2>
+                <ul id="fileList"></ul>
+            </div>
+
+            <!-- Кнопка загрузки -->
+            <div class="actions">
+                <button type="submit" class="btn" aria-label="Загрузить файлы">Загрузить</button>
+            </div>
+        </form>
+    </section>
+</div>
+
+<!-- Модальное окно для прогресса загрузки -->
+<div id="progressModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-content">
+        <h2>Загрузка файлов</h2>
+        <div class="progress-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        <p id="status-text" class="status-text">Загружено: 0%</p>
+        <button id="closeModalButton" class="btn hidden" aria-label="Закрыть модальное окно">Закрыть</button>
+    </div>
+</div>
+
+<script src="/static/js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+server:
+  host: "localhost"
+  port: 9080
+
+database:
+  url: "postgres://postgres:postgres@localhost:5433/postgres?sslmode=disable"
+  max_connections: 30
+  max_idle_connections: 10
+  migrations_dir: "file://migrations"
+  database_name: "postgres"
+
+file_upload:
+  upload_dir: "./uploads"
+  static_dir: "./static"
+
+logging:
+  level: "info"
+
+python:
+  interpreter: "python3"
+  script_path: "./scripts/python_script.py"
