@@ -1,21 +1,21 @@
 server:
-  host: "localhost"
+  host: "0.0.0.0"        # Открытый для внешнего подключения хост
   port: 9080
 
 database:
-  url: "postgres://postgres:postgres@localhost:5433/postgres?sslmode=disable"
+  url: "postgres://postgres:postgres@db:5432/postgres?sslmode=disable"
   max_connections: 30
   max_idle_connections: 10
-  migrations_dir: "file://migrations"
+  migrations_dir: "file:///app/migrations"  # Убедитесь, что путь к миграциям начинается с file:// # Убедитесь, что миграции находятся в папке /app/migrations в контейнере
   database_name: "postgres"
 
 file_upload:
-  upload_dir: "./uploads"
-  static_dir: "./static"
+  upload_dir: "/app/uploads"   # Абсолютный путь внутри контейнера для загрузок
+  static_dir: "/app/static"    # Абсолютный путь к статическим файлам внутри контейнера
 
 logging:
   level: "info"
 
 python:
-  interpreter: "python3"
-  script_path: "./scripts/python_script.py"
+  interpreter: "/app/venv/bin/python"    # Абсолютный путь к Python в контейнере (проверьте правильность)
+  script_path: "/app/scripts/python_script.py"  # Абсолютный путь к Python скрипту

@@ -2,9 +2,11 @@ package transactions
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"statements/internal/database"
 	"strings"
+	"time"
 )
 
 // isValidAccount проверяет корректность номера счета (ожидаемая длина — 20 символов)
@@ -133,16 +135,40 @@ func processVTBTransaction(accountNumber string, transaction map[string]interfac
 	return
 }
 
+// convertDateToISO преобразует дату из формата DD.MM.YYYY в формат YYYY-MM-DD
+func convertDateToISO(date string) (string, error) {
+	// Если дата уже в формате YYYY-MM-DD, просто возвращаем её
+	if len(date) == 10 && date[4] == '-' && date[7] == '-' {
+		return date, nil
+	}
+
+	// Преобразуем из формата DD.MM.YYYY в формат YYYY-MM-DD
+	parsedDate, err := time.Parse("02.01.2006", date) // Формат для DD.MM.YYYY
+	if err != nil {
+		return "", fmt.Errorf("ошибка преобразования даты: %w", err)
+	}
+	return parsedDate.Format("2006-01-02"), nil // Возвращаем дату в формате YYYY-MM-DD
+}
+
 // insertTransaction вставляет транзакцию в базу данных
 func insertTransaction(accountNumber, bank string, transaction map[string]interface{}, debitAccount, creditAccount, inn, name, innC, nameC, documentNumber, paymentDescription string) error {
-	log.Printf("Вставляем транзакцию для счета %s, банк %s, дата %s", accountNumber, bank, transaction["date"])
+	log.Printf("Вставляем транзакцию для счета %s, банк %s, дата %s", accountNumber, bank, getStringValue(transaction, "date"))
 
-	_, err := database.DB.ExecContext(context.Background(),
+	// Преобразование даты в формат YYYY-MM-DD
+	isoDate, err := convertDateToISO(getStringValue(transaction, "date"))
+	if err != nil {
+		log.Printf("Ошибка преобразования даты для счета %s: %v", accountNumber, err)
+		return err
+	}
+
+	log.Printf("Дата после преобразования: %s", isoDate)
+
+	_, err = database.DB.ExecContext(context.Background(),
 		`INSERT INTO transactions (account_number, bank, date, debit_account, credit_account, debit, credit, inn, name, inn_c, name_c, document_number, payment_description)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
 		accountNumber,
 		bank,
-		getStringValue(transaction, "date"),
+		isoDate, // Используем преобразованную дату
 		debitAccount,
 		creditAccount,
 		getStringValue(transaction, "debit"),

@@ -2,18 +2,15 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"log"
 	"os"
 	"statements/internal/config"
 	"statements/internal/database"
 	"statements/internal/handlers"
-	"statements/internal/utils"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	utils.UpdateDependencies()
 	startApp()
 }
 

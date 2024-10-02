@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"strings"
 )
 
 // Config структура для хранения конфигурации
@@ -37,8 +38,17 @@ type Config struct {
 // LoadConfig загружает конфигурацию с помощью Viper
 func LoadConfig(configPath string) (*Config, error) {
 	viper.SetConfigFile(configPath)
-	viper.AutomaticEnv() // Чтение переменных окружения
 
+	// Префикс для переменных окружения, чтобы они не конфликтовали с другими
+	viper.SetEnvPrefix("APP")
+
+	// Замена символов для переменных окружения (чтобы работали переменные типа APP_SERVER_PORT)
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	// Чтение переменных окружения
+	viper.AutomaticEnv()
+
+	// Чтение из конфигурационного файла
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, err
 	}

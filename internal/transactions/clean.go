@@ -28,6 +28,16 @@ func CleanTransaction(transaction map[string]interface{}, bank, accountNumber st
 			}
 		}
 
+		// Преобразование даты
+		if key == "date" {
+			var err error
+			strValue, err = convertDateToISO(strValue)
+			if err != nil {
+				fmt.Printf("Ошибка преобразования даты: %v\n", err)
+				strValue = "" // Установим пустую строку, если дата не может быть преобразована
+			}
+		}
+
 		if strValue == "" || strValue == "Кредит" || strValue == "Дебет" {
 			cleanedTransaction[key] = nil
 		} else {

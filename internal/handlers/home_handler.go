@@ -9,7 +9,8 @@ import (
 
 // HandleHomePageGin обрабатывает запросы к главной странице через Gin
 func HandleHomePageGin(c *gin.Context) {
-	tmpl, err := template.ParseFiles("templates/index.html")
+	// Измените путь к шаблону на абсолютный путь внутри контейнера
+	tmpl, err := template.ParseFiles("/app/templates/index.html")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Ошибка загрузки шаблона")
 		return
