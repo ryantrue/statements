@@ -6,6 +6,7 @@ const progressBar = document.getElementById('progress-bar');
 const statusText = document.getElementById('status-text');
 const closeModalButton = document.getElementById('closeModalButton');
 const dropZone = document.getElementById('drop-zone');
+const downloadButton = document.getElementById('downloadButton');
 
 // Проверка состояния при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
@@ -45,6 +46,11 @@ form.addEventListener('submit', (event) => {
         return;
     }
     uploadFiles();
+});
+
+// Обработка клика на кнопку скачивания Excel
+downloadButton.addEventListener('click', () => {
+    window.location.href = '/download';
 });
 
 // Функция обновления списка файлов

@@ -70,6 +70,9 @@ func registerRoutes(cfg *config.Config) *gin.Engine {
 		handlers.HandleFileUploadGin(c, cfg)
 	})
 
+	// Скачивание Excel
+	router.GET("/download", handlers.HandleDownloadExcel)
+
 	// Статические файлы (CSS, JS)
 	router.Static("/static", cfg.FileUpload.StaticDir)
 
