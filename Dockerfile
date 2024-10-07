@@ -19,8 +19,7 @@ RUN python3 -m venv /app/venv
 # Копирование проекта
 COPY --from=builder /app/statements .
 COPY config.yaml .
-COPY ./templates /app/templates
-COPY ./static /app/static
+COPY ./assets /app/assets
 COPY ./migrations /app/migrations
 COPY ./scripts /app/scripts
 COPY requirements.txt /app/requirements.txt

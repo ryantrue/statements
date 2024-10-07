@@ -1,0 +1,12 @@
+:root {
+    --primary-color: #007aff; /* iOS акцентный синий */
+    --primary-hover: #005bb5; /* Темный синий для hover */
+    --background-color: #f8f9fa; /* Мягкий светло-серый фон */
+    --text-color: #000000; /* Чёрный цвет текста */
+    --border-color: #e1e4e8; /* Легкий серый для границ */
+    --white-color: #ffffff;
+    --light-gray: #f3f4f6; /* Светлый серый для фона зон */
+    --box-shadow-color: rgba(0, 0, 0, 0.05); /* Мягкая тень */
+    --accent-gradient: linear-gradient(135deg, #007aff 0%, #005bb5 100%);
+    --hover-gradient: linear-gradient(135deg, #005bb5 0%, #004494 100%);
+}

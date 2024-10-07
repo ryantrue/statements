@@ -70,11 +70,23 @@ func registerRoutes(cfg *config.Config) *gin.Engine {
 		handlers.HandleFileUploadGin(c, cfg)
 	})
 
-	// Скачивание Excel
-	router.GET("/download", handlers.HandleDownloadExcel)
+	// Страница добавления контрактов
+	router.GET("/add-contract", func(c *gin.Context) {
+		handlers.HandleAddContractPage(c)
+	})
+
+	// Обработка формы добавления контракта
+	router.POST("/submit-contract", func(c *gin.Context) {
+		handlers.HandleContractSubmission(c, cfg, database.DB) // Передаем глобальный объект базы данных
+	})
+
+	// API для получения контрагентов
+	router.GET("/api/counterparties", func(c *gin.Context) {
+		handlers.HandleCounterpartiesList(c, database.DB)
+	})
 
 	// Статические файлы (CSS, JS)
-	router.Static("/static", cfg.FileUpload.StaticDir)
+	router.Static("/assets", cfg.FileUpload.StaticDir)
 
 	return router
 }

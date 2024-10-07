@@ -1,0 +1,14 @@
+/* Контейнер */
+.container {
+    max-width: 700px;
+    margin: 40px auto;
+    background-color: var(--white-color);
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.container:hover {
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+}

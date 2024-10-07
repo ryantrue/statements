@@ -1,0 +1,37 @@
+/* Кнопки */
+.btn {
+    padding: 12px 30px;
+    background: var(--accent-gradient);
+    color: var(--white-color);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: background 0.4s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    background: var(--hover-gradient);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+}
+
+#closeModalButton {
+    margin-top: 25px;
+    display: block;
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.4s ease, transform 0.3s ease;
+}
+
+#closeModalButton:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-3px);
+}
