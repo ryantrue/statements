@@ -1,0 +1,51 @@
+{{ define "content" }}
+<main>
+    <section aria-labelledby="fileUploadSection">
+        <h2 id="fileUploadSection">Форма загрузки файлов</h2>
+
+        <!-- Форма для загрузки файлов -->
+        <form id="uploadForm" method="post" enctype="multipart/form-data" aria-label="Форма загрузки файлов">
+
+            <!-- Зона выбора и перетаскивания файлов -->
+            <div class="file-upload" aria-describedby="dropZoneInstructions">
+                <input type="file" id="fileInput" name="files" multiple accept="image/*,application/pdf" style="display: none;">
+
+                <!-- Зона перетаскивания файлов -->
+                <div id="drop-zone" class="drop-zone" role="button" tabindex="0" aria-label="Перетащите файлы или выберите файлы">
+                    <p id="dropZoneInstructions">Перетащите файлы сюда или нажмите, чтобы выбрать файлы с вашего устройства</p>
+                </div>
+            </div>
+
+            <!-- Список выбранных файлов -->
+            <div class="file-list" aria-live="polite">
+                <h3 id="selectedFilesHeading">Выбранные файлы:</h3>
+                <ul id="fileList" role="list" aria-labelledby="selectedFilesHeading"></ul>
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="actions">
+                <button type="submit" class="btn" aria-label="Загрузить файлы">Загрузить</button>
+                <button id="downloadButton" type="button" class="btn" aria-label="Скачать данные в Excel">Скачать данные в Excel</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Модальное окно для прогресса загрузки -->
+    <div id="progressModal" class="modal hidden" aria-hidden="true" role="dialog" aria-labelledby="progressModalTitle" aria-describedby="progressModalDescription">
+        <div class="modal-content">
+            <h2 id="progressModalTitle">Загрузка файлов</h2>
+
+            <!-- Прогресс загрузки -->
+            <div id="progressModalDescription">
+                <div class="progress-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <p id="status-text" class="status-text">Загружено: 0%</p>
+            </div>
+
+            <!-- Кнопка закрытия -->
+            <button id="closeModalButton" class="btn hidden" aria-label="Закрыть модальное окно">Закрыть</button>
+        </div>
+    </div>
+</main>
+{{ end }}

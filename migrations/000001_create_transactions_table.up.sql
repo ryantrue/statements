@@ -1,32 +1,14 @@
--- Проверка существования базы данных и её создание
-DO
-$do$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_database WHERE datname = 'postgres'
-    ) THEN
-        PERFORM dblink_exec('dbname=template1', 'CREATE DATABASE postgres');
-END IF;
-END
-$do$;
-
--- Подключитесь к новой базе данных вручную через клиент psql или в коде
--- \c postgres
-
--- Создание таблицы и индексов в транзакции для атомарности
-BEGIN;
-
 -- Создание таблицы transactions, если она не существует
 CREATE TABLE IF NOT EXISTS transactions (
                                             id SERIAL PRIMARY KEY,                                      -- Первичный ключ
                                             account_number VARCHAR(20) NOT NULL,                        -- Номер счёта, обязателен
     bank VARCHAR(10) NOT NULL,                                  -- Название банка, обязательно
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),            -- Дата транзакции, не может быть в будущем
-    debit_account VARCHAR(20) NOT NULL,                         -- Счет дебета, обязателен
-    inn VARCHAR(12) CHECK (char_length(inn) IN (10, 12)),       -- ИНН, должен быть 10 или 12 символов
-    name TEXT NOT NULL,                                         -- Имя контрагента, обязательно
-    credit_account VARCHAR(20) NOT NULL,                        -- Счет кредита, обязателен
-    inn_c VARCHAR(12) CHECK (char_length(inn_c) IN (10, 12)),   -- ИНН контрагента, должен быть 10 или 12 символов
+    debit_account VARCHAR(20),                                  -- Счет дебета, может быть NULL
+    inn VARCHAR(12) CHECK (inn IS NULL OR char_length(inn) IN (10, 12)), -- ИНН, должен быть 10 или 12 символов или NULL
+    name TEXT,                                                  -- Имя контрагента, может быть NULL
+    credit_account VARCHAR(20),                                 -- Счет кредита, может быть NULL
+    inn_c VARCHAR(12) CHECK (inn_c IS NULL OR char_length(inn_c) IN (10, 12)), -- ИНН контрагента, может быть 10 или 12 символов или NULL
     name_c TEXT NOT NULL,                                       -- Имя контрагента кредита, обязательно
     debit NUMERIC(15, 2) DEFAULT 0.00 CHECK (debit >= 0),       -- Дебет, не может быть отрицательным
     credit NUMERIC(15, 2) DEFAULT 0.00 CHECK (credit >= 0),     -- Кредит, не может быть отрицательным

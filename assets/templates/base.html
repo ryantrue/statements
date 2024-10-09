@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }}</title>
+
+    <!-- Подключение CSS файлов -->
+    <link rel="stylesheet" href="/assets/css/variables.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/components/container.css">
+    <link rel="stylesheet" href="/assets/css/components/buttons.css">
+    <link rel="stylesheet" href="/assets/css/components/modal.css">
+    <link rel="stylesheet" href="/assets/css/components/progress-bar.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+<body>
+<!-- Шапка вне контейнера для полной ширины -->
+<header class="site-header">
+    <div class="header-content">
+        <h1>{{ .Header }}</h1>
+        {{ template "menu" . }} <!-- Подключаем меню -->
+    </div>
+</header>
+
+<!-- Основной контейнер -->
+<div class="site-container">
+    <main>
+        {{ template "content" . }}
+    </main>
+</div>
+
+<!-- Подвал вне контейнера для полной ширины -->
+<footer class="site-footer">
+    <div class="footer-content">
+        <p>&copy; <span id="currentYear"></span> RyanTrue5. Все права защищены.</p>
+    </div>
+</footer>
+
+<script>
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+</script>
+
+<!-- Подключаем скрипты -->
+<script src="/assets/js/domElements.js"></script>
+<script src="/assets/js/dragAndDrop.js"></script>
+<script src="/assets/js/eventHandlers.js"></script>
+<script src="/assets/js/loadCounterparties.js"></script>
+<script src="/assets/js/scripts.js"></script>
+<script src="/assets/js/uiFunctions.js"></script>
+<script src="/assets/js/uploadLogic.js"></script>
+</body>
+</html>

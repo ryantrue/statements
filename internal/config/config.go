@@ -33,6 +33,13 @@ type Config struct {
 		Interpreter string `mapstructure:"interpreter"`
 		ScriptPath  string `mapstructure:"script_path"`
 	} `mapstructure:"python"`
+
+	Organization struct {
+		DefaultInn        string `mapstructure:"default_inn"`
+		DefaultName       string `mapstructure:"default_name"`
+		DefaultInnCredit  string `mapstructure:"default_inn_credit"`
+		DefaultNameCredit string `mapstructure:"default_name_credit"`
+	} `mapstructure:"organization"`
 }
 
 // LoadConfig загружает конфигурацию с помощью Viper

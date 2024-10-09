@@ -19,3 +19,9 @@ logging:
 python:
   interpreter: "/app/venv/bin/python"
   script_path: "/app/scripts/python_script.py"
+
+  organization:
+    default_inn: "7719034354"
+    default_name: "КАЗЕННОЕ ПРЕДПРИЯТИЕ 'МОСКОВСКАЯ ЭНЕРГЕТИЧЕСКАЯ ДИРЕКЦИЯ'"
+    default_inn_credit: "7719034354"
+    default_name_credit: "КАЗЕННОЕ ПРЕДПРИЯТИЕ 'МОСКОВСКАЯ ЭНЕРГЕТИЧЕСКАЯ ДИРЕКЦИЯ'"
