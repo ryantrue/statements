@@ -1,59 +1,72 @@
 {{ define "content" }}
+
+<head>
+    <!-- Подключение глобальных стилей -->
+    <link rel="stylesheet" href="/assets/css/base.css"> <!-- Базовые стили, сбросы -->
+    <link rel="stylesheet" href="/assets/css/variables.css"> <!-- Переменные стилей -->
+    <link rel="stylesheet" href="/assets/css/components/buttons.css"> <!-- Стили для кнопок -->
+    <link rel="stylesheet" href="/assets/css/components/container.css">
+    <link rel="stylesheet" href="/assets/css/components/modal.css">
+    <link rel="stylesheet" href="/assets/css/components/progress-bar.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
 <section>
-    <form id="contractForm" method="post" action="/submit-contract" enctype="multipart/form-data">
-        <!-- Поля для ввода информации о контракте -->
-        <div class="contract-info">
-            <h2>Информация о контракте</h2>
+    <form id="requestForm" method="post" action="/submit-request" enctype="multipart/form-data">
+        <!-- Поля для ввода информации о заявке -->
+        <div class="request-info">
+            <h2>Информация о заявке</h2>
 
             <label for="counterparty">Контрагент:</label>
             <select id="counterparty" name="counterparty_id" required>
                 <!-- Контрагенты загружаются здесь -->
             </select>
 
-            <label for="contractNumber">Номер контракта:</label>
+            <label for="requestAmount">Сумма:</label>
+            <input type="number" id="requestAmount" name="amount" step="0.01" required>
+
+            <label for="documentType">Тип документа на оплату:</label>
+            <input type="text" id="documentType" name="document_type" required>
+
+            <label for="documentNumber">Номер документа:</label>
+            <input type="text" id="documentNumber" name="document_number" required>
+
+            <label for="documentDate">Дата документа:</label>
+            <input type="date" id="documentDate" name="document_date" required>
+
+            <label for="paymentPurpose">Назначение платежа:</label>
+            <textarea id="paymentPurpose" name="payment_purpose" rows="4" required></textarea>
+
+            <label for="contractNumber">Номер договора:</label>
             <input type="text" id="contractNumber" name="contract_number" required>
 
-            <label for="contractDate">Дата заключения контракта:</label>
+            <label for="contractDate">Дата договора:</label>
             <input type="date" id="contractDate" name="contract_date" required>
 
-            <label for="executionPeriod">Срок исполнения контракта:</label>
-            <input type="date" id="executionPeriod" name="execution_period" required>
+            <label for="address">Адрес:</label>
+            <input type="text" id="address" name="address" required>
 
             <label for="contractAmount">Сумма договора:</label>
-            <input type="number" id="contractAmount" name="amount" step="0.01" required>
-
-            <label for="contractType">Тип контракта:</label>
-            <input type="text" id="contractType" name="contract_type" required>
-
-            <label for="subject">Предмет контракта:</label>
-            <textarea id="subject" name="subject" rows="4" required></textarea>
+            <input type="number" id="contractAmount" name="contract_amount" step="0.01" required>
         </div>
 
         <!-- Зона для загрузки файлов -->
         <div class="file-upload">
             <h2>Загрузка документов</h2>
 
-            <label for="contractFile">Контракт (PDF/DOCX):</label>
-            <input type="file" id="contractFile" name="contract_file" accept=".pdf,.docx" required>
+            <label for="requestFile">Документ на оплату (PDF/DOCX):</label>
+            <input type="file" id="requestFile" name="request_file" accept=".pdf,.docx" required>
 
-            <label for="memoFile">Служебная записка (PDF/DOCX):</label>
-            <input type="file" id="memoFile" name="memo_file" accept=".pdf,.docx">
-
-            <label for="ecpFile">ЭЦП (PDF/DOCX):</label>
-            <input type="file" id="ecpFile" name="ecp_file" accept=".pdf,.docx">
-
-            <label for="technicalTaskFile">Техническое задание (PDF/DOCX):</label>
-            <input type="file" id="technicalTaskFile" name="technical_task_file" accept=".pdf,.docx">
-
-            <label for="additionalFiles">Дополнительные документы (PDF/DOCX):</label>
-            <input type="file" id="additionalFiles" name="additional_files[]" accept=".pdf,.docx" multiple>
+            <label for="supportingDocuments">Дополнительные документы (PDF/DOCX):</label>
+            <input type="file" id="supportingDocuments" name="supporting_documents[]" accept=".pdf,.docx" multiple>
         </div>
 
         <!-- Кнопки действий -->
         <div class="actions">
-            <button type="submit" class="btn" aria-label="Добавить контракт">Добавить контракт</button>
+            <button type="submit" class="btn" aria-label="Создать заявку">Создать заявку</button>
             <button type="reset" class="btn" aria-label="Очистить форму">Очистить форму</button>
         </div>
     </form>
 </section>
 {{ end }}
+

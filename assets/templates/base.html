@@ -6,17 +6,12 @@
     <title>{{ .Title }}</title>
 
     <!-- Подключение CSS файлов -->
-    <link rel="stylesheet" href="/assets/css/variables.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="/assets/css/base.css">
     <link rel="stylesheet" href="/assets/css/styles.css">
-    <link rel="stylesheet" href="/assets/css/components/container.css">
-    <link rel="stylesheet" href="/assets/css/components/buttons.css">
-    <link rel="stylesheet" href="/assets/css/components/modal.css">
-    <link rel="stylesheet" href="/assets/css/components/progress-bar.css">
-    <link rel="stylesheet" href="/assets/css/utilities.css">
 </head>
 <body>
-<!-- Шапка вне контейнера для полной ширины -->
+<!-- Фиксированная шапка вне контейнера для полной ширины -->
 <header class="site-header">
     <div class="header-content">
         <h1>{{ .Header }}</h1>
@@ -24,7 +19,7 @@
     </div>
 </header>
 
-<!-- Основной контейнер -->
+<!-- Основной контейнер с отступом сверху для учета фиксированного меню -->
 <div class="site-container">
     <main>
         {{ template "content" . }}
@@ -34,13 +29,14 @@
 <!-- Подвал вне контейнера для полной ширины -->
 <footer class="site-footer">
     <div class="footer-content">
-        <p>&copy; <span id="currentYear"></span> RyanTrue5. Все права защищены.</p>
+        <p>&copy; <span id="currentYear"></span> RyanTrue. Все права защищены.</p>
     </div>
 </footer>
 
 <script>
     document.getElementById("currentYear").textContent = new Date().getFullYear();
 </script>
+
 
 <!-- Подключаем скрипты -->
 <script src="/assets/js/domElements.js"></script>

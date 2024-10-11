@@ -1,0 +1,9 @@
+/* main.css */
+@import url('variables.css');    /* Переменные */
+@import url('base.css');         /* Базовые стили, сбросы */
+@import url('layout.css');       /* Основные блоки: шапка, футер, контейнеры */
+@import url('components/buttons.css');      /* Стили для кнопок */
+@import url('components/modal.css');        /* Модальные окна */
+@import url('components/progress-bar.css'); /* Прогресс бары */
+@import url('media.css');        /* Медиа-запросы для адаптивности */
+@import url('utilities.css');    /* Утилитарные классы и вспомогательные стили */

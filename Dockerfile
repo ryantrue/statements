@@ -1,34 +1,47 @@
-# Этап 1: Сборка приложения
+# Этап 1: Сборка Go-приложения
 FROM golang:1.23-alpine AS builder
+
+# Установка рабочей директории
 WORKDIR /app
+
+# Кэшируем зависимости Go
 COPY go.mod go.sum ./
 RUN go mod tidy
+
+# Копируем исходный код Go после установки зависимостей, чтобы избежать пересборки на изменениях в коде
 COPY . .
+
+# Сборка бинарного файла Go
 RUN go build -o statements ./cmd/main.go
 
 # Этап 2: Минимальный образ для запуска
 FROM alpine:latest
-WORKDIR /root/
 
-# Установка Python3 и pip
+# Установка необходимых пакетов для Python
 RUN apk add --no-cache python3 py3-pip
 
-# Создание виртуального окружения Python
-RUN python3 -m venv /app/venv
+# Устанавливаем рабочую директорию
+WORKDIR /root/
 
-# Копирование проекта
+# Копируем Go-бинарник из builder этапа
 COPY --from=builder /app/statements .
+
+# Копируем файлы конфигурации и необходимые ресурсы
 COPY config.yaml .
 COPY ./assets /app/assets
 COPY ./migrations /app/migrations
 COPY ./scripts /app/scripts
+
+# Копируем Python зависимости
 COPY requirements.txt /app/requirements.txt
 
-# Установка Python зависимостей
-RUN /app/venv/bin/pip install -r /app/requirements.txt
+# Создание и настройка виртуального окружения Python
+RUN python3 -m venv /app/venv \
+    && /app/venv/bin/pip install --upgrade pip \
+    && /app/venv/bin/pip install -r /app/requirements.txt
 
-# Экспонирование порта
+# Экспонируем порт для приложения
 EXPOSE 9080
 
-# Запуск приложения
+# Запускаем приложение
 CMD ["./statements", "--config", "config.yaml"]

@@ -11,12 +11,15 @@ import (
 
 // RegisterRoutes регистрирует маршруты с использованием Gin
 func RegisterRoutes(cfg *config.Config) *gin.Engine {
+	// Инициализируем роутер
 	router := gin.Default()
 
-	// Добавляем middleware
-	router.Use(middleware.ErrorHandling())
+	// Добавляем middleware для CORS и обработки ошибок
 	router.Use(middleware.CORSMiddleware())
-	router.Use(middleware.AuthMiddleware())
+	router.Use(middleware.ErrorHandling())
+
+	// Добавляем JWT аутентификацию
+	router.Use(middleware.AuthMiddleware()) // Защищённые маршруты требуют JWT
 
 	// Регистрация маршрутов
 	registerStaticRoutes(router)
@@ -46,6 +49,7 @@ func registerStaticRoutes(router *gin.Engine) {
 func registerAPIRoutes(router *gin.Engine, cfg *config.Config, db *sql.DB) {
 	api := router.Group("/api/v1")
 	{
+		// Пример API эндпоинта для получения списка контрагентов
 		api.GET("/counterparties", func(c *gin.Context) {
 			handlers.HandleCounterpartiesList(c, db)
 		})
@@ -54,7 +58,7 @@ func registerAPIRoutes(router *gin.Engine, cfg *config.Config, db *sql.DB) {
 
 // registerFileUploadRoutes регистрирует маршруты для загрузки файлов
 func registerFileUploadRoutes(router *gin.Engine, cfg *config.Config) {
-	upload := router.Group("upload")
+	upload := router.Group("/upload")
 	{
 		upload.POST("/", func(c *gin.Context) {
 			handlers.HandleFileUploadGin(c, cfg)

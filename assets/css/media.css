@@ -1,0 +1,32 @@
+/* media.css */
+@media (max-width: 768px) {
+    .main-menu ul {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: var(--white-color);
+        padding: 10px 0;
+        box-shadow: var(--menu-shadow);
+    }
+
+    .main-menu ul.active {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .site-container {
+        padding-top: 120px;
+    }
+}

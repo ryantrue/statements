@@ -1,60 +1,94 @@
 {{ define "content" }}
+<head>
+    <!-- Подключение глобальных стилей -->
+    <link rel="stylesheet" href="/assets/css/base.css"> <!-- Базовые стили, сбросы -->
+    <link rel="stylesheet" href="/assets/css/variables.css"> <!-- Переменные стилей -->
+    <link rel="stylesheet" href="/assets/css/components/buttons.css"> <!-- Стили для кнопок -->
+
+    <!-- Подключение специфичных стилей для формы контракта -->
+    <link rel="stylesheet" href="/assets/css/components/contract-form.css">
+</head>
+
 <section>
-    <form id="requestForm" method="post" action="/submit-request" enctype="multipart/form-data">
-        <!-- Поля для ввода информации о заявке -->
-        <div class="request-info">
-            <h2>Информация о заявке</h2>
+    <form id="contractForm" method="post" action="/submit-contract" enctype="multipart/form-data">
 
-            <label for="counterparty">Контрагент:</label>
-            <select id="counterparty" name="counterparty_id" required>
-                <!-- Контрагенты загружаются здесь -->
-            </select>
+        <!-- Информация о контракте -->
+        <fieldset class="contract-info">
+            <legend>Информация о контракте</legend>
 
-            <label for="requestAmount">Сумма:</label>
-            <input type="number" id="requestAmount" name="amount" step="0.01" required>
+            <div class="form-group">
+                <label for="counterparty">Контрагент:</label>
+                <select id="counterparty" name="counterparty_id" required>
+                    <!-- Контрагенты загружаются здесь -->
+                </select>
+            </div>
 
-            <label for="documentType">Тип документа на оплату:</label>
-            <input type="text" id="documentType" name="document_type" required>
+            <div class="form-group">
+                <label for="contractNumber">Номер контракта:</label>
+                <input type="text" id="contractNumber" name="contract_number" required>
+            </div>
 
-            <label for="documentNumber">Номер документа:</label>
-            <input type="text" id="documentNumber" name="document_number" required>
+            <div class="form-group">
+                <label for="contractDate">Дата заключения контракта:</label>
+                <input type="date" id="contractDate" name="contract_date" required>
+            </div>
 
-            <label for="documentDate">Дата документа:</label>
-            <input type="date" id="documentDate" name="document_date" required>
+            <div class="form-group">
+                <label for="executionPeriod">Срок исполнения контракта:</label>
+                <input type="date" id="executionPeriod" name="execution_period" required>
+            </div>
 
-            <label for="paymentPurpose">Назначение платежа:</label>
-            <textarea id="paymentPurpose" name="payment_purpose" rows="4" required></textarea>
+            <div class="form-group">
+                <label for="contractAmount">Сумма договора:</label>
+                <input type="number" id="contractAmount" name="amount" step="0.01" required>
+            </div>
 
-            <label for="contractNumber">Номер договора:</label>
-            <input type="text" id="contractNumber" name="contract_number" required>
+            <div class="form-group">
+                <label for="contractType">Тип контракта:</label>
+                <input type="text" id="contractType" name="contract_type" required>
+            </div>
 
-            <label for="contractDate">Дата договора:</label>
-            <input type="date" id="contractDate" name="contract_date" required>
+            <div class="form-group">
+                <label for="subject">Предмет контракта:</label>
+                <textarea id="subject" name="subject" rows="4" required></textarea>
+            </div>
+        </fieldset>
 
-            <label for="address">Адрес:</label>
-            <input type="text" id="address" name="address" required>
+        <!-- Загрузка документов -->
+        <fieldset class="file-upload">
+            <legend>Загрузка документов</legend>
 
-            <label for="contractAmount">Сумма договора:</label>
-            <input type="number" id="contractAmount" name="contract_amount" step="0.01" required>
-        </div>
+            <div class="form-group">
+                <label for="contractFile">Контракт (PDF/DOCX):</label>
+                <input type="file" id="contractFile" name="contract_file" accept=".pdf,.docx" required>
+            </div>
 
-        <!-- Зона для загрузки файлов -->
-        <div class="file-upload">
-            <h2>Загрузка документов</h2>
+            <div class="form-group">
+                <label for="memoFile">Служебная записка (PDF/DOCX):</label>
+                <input type="file" id="memoFile" name="memo_file" accept=".pdf,.docx">
+            </div>
 
-            <label for="requestFile">Документ на оплату (PDF/DOCX):</label>
-            <input type="file" id="requestFile" name="request_file" accept=".pdf,.docx" required>
+            <div class="form-group">
+                <label for="ecpFile">ЭЦП (PDF/DOCX):</label>
+                <input type="file" id="ecpFile" name="ecp_file" accept=".pdf,.docx">
+            </div>
 
-            <label for="supportingDocuments">Дополнительные документы (PDF/DOCX):</label>
-            <input type="file" id="supportingDocuments" name="supporting_documents[]" accept=".pdf,.docx" multiple>
-        </div>
+            <div class="form-group">
+                <label for="technicalTaskFile">Техническое задание (PDF/DOCX):</label>
+                <input type="file" id="technicalTaskFile" name="technical_task_file" accept=".pdf,.docx">
+            </div>
+
+            <div class="form-group">
+                <label for="additionalFiles">Дополнительные документы (PDF/DOCX):</label>
+                <input type="file" id="additionalFiles" name="additional_files[]" accept=".pdf,.docx" multiple>
+            </div>
+        </fieldset>
 
         <!-- Кнопки действий -->
         <div class="actions">
-            <button type="submit" class="btn" aria-label="Создать заявку">Создать заявку</button>
+            <button type="submit" class="btn" aria-label="Добавить контракт">Добавить контракт</button>
             <button type="reset" class="btn" aria-label="Очистить форму">Очистить форму</button>
         </div>
     </form>
 </section>
 {{ end }}
-

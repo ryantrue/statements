@@ -1,27 +1,30 @@
+# Конфигурация сервера
 server:
-  host: "0.0.0.0"        # Открытый для внешнего подключения хост
-  port: 9080
+  host: "0.0.0.0"    # IP-адрес, на котором сервер слушает входящие запросы
+  port: 9080         # Порт, на котором запускается сервер
 
+# Конфигурация базы данных
 database:
   url: "postgres://postgres:postgres@db:5432/postgres?sslmode=disable"
-  max_connections: 30
-  max_idle_connections: 10
-  migrations_dir: "file:///app/migrations"
-  database_name: "postgres"
+  max_connections: 30                 # Максимальное количество подключений к базе данных
+  max_idle_connections: 10            # Максимальное количество неактивных соединений
+  migrations_dir: "file:///app/migrations"  # Директория миграций базы данных
+  database_name: "postgres"           # Название базы данных
 
+# Конфигурация загрузки файлов
 file_upload:
-  upload_dir: "/app/uploads"
-  static_dir: "/app/assets"
+  upload_dir: "/app/uploads"          # Директория для загрузки файлов
+  static_dir: "/app/assets"           # Директория для статических файлов
 
+# Конфигурация логирования
 logging:
-  level: "info"
+  level: "info"                       # Уровень логирования (debug, info, warn, error)
 
+# Конфигурация авторизации (JWT)
+auth:
+  jwt_secret: "${JWT_SECRET}"         # Секретный ключ для JWT авторизации (лучше хранить в переменной окружения)
+
+# Конфигурация Python
 python:
-  interpreter: "/app/venv/bin/python"
-  script_path: "/app/scripts/python_script.py"
-
-  organization:
-    default_inn: "7719034354"
-    default_name: "КАЗЕННОЕ ПРЕДПРИЯТИЕ 'МОСКОВСКАЯ ЭНЕРГЕТИЧЕСКАЯ ДИРЕКЦИЯ'"
-    default_inn_credit: "7719034354"
-    default_name_credit: "КАЗЕННОЕ ПРЕДПРИЯТИЕ 'МОСКОВСКАЯ ЭНЕРГЕТИЧЕСКАЯ ДИРЕКЦИЯ'"
+  interpreter: "/app/venv/bin/python" # Путь к интерпретатору Python
+  script_path: "/app/scripts/python_script.py"  # Путь к исполняемому Python-скрипту

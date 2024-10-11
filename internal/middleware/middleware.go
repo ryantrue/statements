@@ -1,76 +1,94 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"net/http"
+	"time"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/go-chi/jwtauth"
+	"go.uber.org/zap"
 )
 
-// ErrorHandling middleware для обработки ошибок с улучшенным логированием
-func ErrorHandling() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Next()
+// Инициализация JWT с секретным ключом
+var tokenAuth *jwtauth.JWTAuth
 
-		// Проверка на наличие ошибок
-		if len(c.Errors) > 0 {
-			for _, err := range c.Errors {
-				// Логирование ошибок с различными уровнями
-				switch err.Type {
-				case gin.ErrorTypePublic:
-					logrus.Warnf("Публичная ошибка: %s", err.Error())
-					c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-				case gin.ErrorTypeBind:
-					logrus.Errorf("Ошибка биндинга данных: %s", err.Error())
-					c.JSON(http.StatusBadRequest, gin.H{"error": "Неверные данные запроса"})
-				default:
-					logrus.Errorf("Внутренняя ошибка сервера: %s", err.Error())
-					c.JSON(http.StatusInternalServerError, gin.H{"error": "Внутренняя ошибка сервера"})
-				}
-			}
-			return
-		}
+func InitJWT(secret string) {
+	tokenAuth = jwtauth.New("HS256", []byte(secret), nil)
+}
 
-		// Обработка 404 ошибки
-		if c.Writer.Status() == http.StatusNotFound {
-			logrus.Warn("Страница не найдена")
-			c.JSON(http.StatusNotFound, gin.H{"error": "Страница не найдена"})
-		}
+// Инициализация Zap логгера
+var logger *zap.Logger
+
+func InitLogger() {
+	var err error
+	logger, err = zap.NewProduction() // Логгер для продакшна
+	if err != nil {
+		panic("Не удалось инициализировать логгер: " + err.Error())
 	}
+	defer logger.Sync() // Запись всех буферов перед завершением
 }
 
 // CORSMiddleware добавляет поддержку CORS с возможностью настройки
 func CORSMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "*") // Позволяет запросы со всех источников, можно настроить
-		c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
-
-		// Обрабатываем preflight-запросы для CORS
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(http.StatusNoContent)
-			return
-		}
-
-		// Можно добавить дополнительные проверки или логику, если требуется
-		c.Next()
+	config := cors.Config{
+		AllowOrigins:     []string{"https://example.com"}, // Здесь можно указать свои разрешённые домены
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Authorization", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
 	}
+	return cors.New(config)
 }
 
-// AuthMiddleware проверяет наличие и валидность токена в заголовке Authorization
+// AuthMiddleware проверяет и валидирует JWT токен
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.GetHeader("Authorization")
-
-		if token == "" {
-			logrus.Warn("Токен авторизации отсутствует")
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Необходим токен авторизации"})
+		_, claims, err := jwtauth.FromContext(c.Request.Context())
+		if err != nil {
+			logger.Warn("Невалидный токен", zap.String("path", c.Request.URL.Path))
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Невалидный токен"})
 			c.Abort()
 			return
 		}
 
-		// Здесь можно добавить логику для проверки токена
-		// Например, вызов функции для валидации токена
-
+		logger.Info("Токен валиден", zap.Any("claims", claims))
+		c.Set("claims", claims)
 		c.Next()
+	}
+}
+
+// HandleError логирует и возвращает ошибки с использованием Zap
+func HandleError(c *gin.Context, err *gin.Error) {
+	switch err.Type {
+	case gin.ErrorTypePublic:
+		logger.Warn("Публичная ошибка", zap.String("error", err.Error()))
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	case gin.ErrorTypeBind:
+		logger.Error("Ошибка биндинга данных", zap.String("error", err.Error()))
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Неверные данные запроса"})
+	default:
+		logger.Error("Внутренняя ошибка сервера", zap.String("error", err.Error()))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Внутренняя ошибка сервера"})
+	}
+}
+
+// ErrorHandling middleware для обработки ошибок с улучшенным логированием через Zap
+func ErrorHandling() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Next()
+
+		if len(c.Errors) > 0 {
+			for _, err := range c.Errors {
+				HandleError(c, err)
+			}
+			return
+		}
+
+		if c.Writer.Status() == http.StatusNotFound {
+			logger.Warn("Страница не найдена", zap.String("path", c.Request.URL.Path))
+			c.JSON(http.StatusNotFound, gin.H{"error": "Страница не найдена"})
+		}
 	}
 }

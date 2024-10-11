@@ -1,54 +1,116 @@
-/* Переменные для стилей */
-:root {
-    --primary-color: #007aff; /* iOS акцентный синий */
-    --primary-hover: #005bb5; /* Темный синий для hover */
-    --background-color: #f8f9fa; /* Мягкий светло-серый фон */
-    --text-color: #000000; /* Чёрный цвет текста */
-    --border-color: #e1e4e8; /* Легкий серый для границ */
-    --white-color: #ffffff;
-    --light-gray: #f3f4f6; /* Светлый серый для фона зон */
-    --box-shadow-color: rgba(0, 0, 0, 0.05); /* Мягкая тень */
-    --accent-gradient: linear-gradient(135deg, #007aff 0%, #005bb5 100%);
-    --hover-gradient: linear-gradient(135deg, #005bb5 0%, #004494 100%);
-}
-
-/* Общие стили */
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
-}
-
-/* Контейнер */
-.container {
-    max-width: 700px;
-    margin: 40px auto;
+/* Фиксированная шапка */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     background-color: var(--white-color);
-    padding: 40px;
-    border-radius: 25px;
-    box-shadow: 0 10px 40px var(--box-shadow-color);
-    transition: all 0.3s ease;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--menu-shadow);
+    z-index: 1000;
 }
 
-.container:hover {
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
 }
 
-/* Заголовок */
-h1 {
+/* Меню */
+.main-menu {
+    display: flex;
+    align-items: center;
+}
+
+.main-menu ul {
+    display: flex;
+    gap: 15px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.main-menu li a {
+    display: block;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: var(--text-color);
+    text-decoration: none;
+    background-color: var(--white-color);
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.main-menu li a:hover {
+    background-color: var(--light-gray);
+    color: var(--text-color);
+}
+
+/* Бургер-кнопка для мобильных */
+.menu-toggle {
+    display: none;
+    font-size: 30px;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+/* Прячем меню на мобильных устройствах */
+@media (max-width: 768px) {
+    .main-menu ul {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        position: absolute;
+        top: 60px; /* Отступ от верхнего меню */
+        left: 0;
+        width: 100%;
+        background-color: var(--white-color);
+        padding: 10px 0;
+        box-shadow: var(--menu-shadow);
+    }
+
+    .main-menu ul.active {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .site-container {
+        padding-top: 120px; /* Увеличиваем отступ для мобильных */
+    }
+}
+
+/* Отступ для основного контейнера */
+.site-container {
+    padding-top: 100px; /* Отступ равен высоте шапки */
+}
+
+/* Стили футера */
+.site-footer {
+    background-color: #f8f9fa;
     text-align: center;
-    color: var(--primary-color);
-    font-size: 24px;
-    margin-bottom: 25px;
-    font-weight: 600;
-    letter-spacing: 0.8px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 1rem 0;
 }
 
-/* Зона выбора и перетаскивания файлов */
+.footer-content p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Зона выбора файлов */
 .file-upload {
     text-align: center;
     margin-bottom: 30px;
@@ -67,9 +129,9 @@ input[type="file"] {
     font-size: 16px;
     font-weight: 500;
     position: relative;
-    transition: background-color 0.4s ease, box-shadow 0.3s ease;
     cursor: pointer;
     box-shadow: 0 5px 20px var(--box-shadow-color);
+    transition: background-color 0.4s ease, box-shadow 0.3s ease;
 }
 
 .drop-zone::before {
@@ -131,104 +193,4 @@ input[type="file"] {
     margin-right: 15px;
     border-radius: 12px;
     border: 1px solid var(--border-color);
-}
-
-/* Кнопки */
-.btn {
-    padding: 12px 30px;
-    background: var(--accent-gradient);
-    color: var(--white-color);
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: background 0.4s ease, box-shadow 0.3s ease, transform 0.2s ease;
-}
-
-.btn:hover {
-    background: var(--hover-gradient);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    transform: translateY(-3px);
-}
-
-/* Модальное окно */
-.modal {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-}
-
-.modal-content {
-    background-color: var(--white-color);
-    padding: 40px;
-    border-radius: 30px;
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-}
-
-.modal-content:active {
-    transform: scale(0.98);
-}
-
-.hidden {
-    display: none;
-}
-
-/* Прогресс-бар */
-.progress-container {
-    background-color: var(--light-gray);
-    border: 1px solid var(--border-color);
-    border-radius: 15px;
-    width: 100%;
-    height: 20px;
-    margin: 30px 0;
-    position: relative;
-    overflow: hidden;
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.progress-bar {
-    width: 0;
-    height: 100%;
-    background: var(--accent-gradient);
-    border-radius: 15px;
-    transition: width 0.4s ease;
-}
-
-.status-text {
-    font-size: 16px;
-    color: var(--text-color);
-    font-weight: 500;
-    margin-top: 15px;
-}
-
-/* Кнопка закрытия модального окна */
-#closeModalButton {
-    margin-top: 25px;
-    display: block;
-    padding: 12px 24px;
-    background-color: var(--primary-color);
-    color: var(--white-color);
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.4s ease, transform 0.3s ease;
-}
-
-#closeModalButton:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-3px);
 }

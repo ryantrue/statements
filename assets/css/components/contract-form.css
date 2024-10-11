@@ -1,0 +1,112 @@
+/* contract-form.css */
+
+/* Основной контейнер формы */
+form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--white-color);
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Группы полей формы */
+fieldset {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+
+legend {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+/* Группы полей ввода */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(0, 122, 255, 0.3);
+}
+
+/* Стиль для кнопок */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.actions .btn {
+    width: 48%;
+    padding: 12px 20px;
+    background: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.4s ease, transform 0.2s ease;
+}
+
+.actions .btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+/* Файловая загрузка */
+.file-upload .form-group input[type="file"] {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--light-gray);
+    cursor: pointer;
+}
+
+.file-upload .form-group input[type="file"]:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+/* Медиа-запросы для мобильных устройств */
+@media (max-width: 768px) {
+    form {
+        padding: 15px;
+    }
+
+    .actions .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+}

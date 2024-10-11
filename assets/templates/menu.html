@@ -1,11 +1,55 @@
 {{ define "menu" }}
-<nav class="main-menu">
-    <ul>
-        <li><a href="/">Главная</a></li>
-        <li><a href="/add-contract">/Заявка/Добавить контракт</a></li>
-        <li><a href="/upload">Загрузить файлы</a></li>
-        <li><a href="/api/v1/counterparties">Контрагенты</a></li>
-        <li><a href="/add-request">Заявка</a></li>
-    </ul>
-</nav>
+<header class="site-header">
+    <div class="header-content">
+        <!-- Логотип или название сайта -->
+        <div class="logo">
+            <a href="/">Главная</a>
+        </div>
+
+        <!-- Бургер-меню -->
+        <button class="menu-toggle" id="menu-toggle" aria-label="Открыть меню" aria-expanded="false">
+            &#9776;
+        </button>
+
+        <!-- Основное меню -->
+        <nav class="main-menu" id="main-menu" role="navigation" aria-label="Главное меню">
+            <ul id="menu-list" class="menu-list">
+                <li><a href="/">Главная</a></li>
+                <li><a href="/add-contract">Добавить контракт</a></li>
+                <li><a href="/upload">Загрузить файлы</a></li>
+                <li><a href="/api/v1/counterparties">Контрагенты</a></li>
+                <li><a href="/add-request">Заявка</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<script>
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+        const menu = document.getElementById('main-menu');
+        const expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !expanded);
+        menu.classList.toggle('open');
+    });
+</script>
+
+<style>
+    .main-menu {
+        display: none;
+    }
+
+    .main-menu.open {
+        display: block;
+    }
+
+    @media (min-width: 768px) {
+        .main-menu {
+            display: block;
+        }
+
+        .menu-toggle {
+            display: none;
+        }
+    }
+</style>
 {{ end }}

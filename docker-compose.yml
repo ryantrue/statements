@@ -1,11 +1,13 @@
+version: "4.0"
+
 services:
   app:
     build: .
     image: statements:latest
-    ports:
-      - "9080:9080"
+    container_name: statements_app
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres?sslmode=disable
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
       db:
         condition: service_healthy
@@ -13,21 +15,45 @@ services:
       - ./uploads:/app/uploads
       - ./assets:/app/assets
       - ./migrations:/app/migrations
+    networks:
+      - app-network
 
   db:
-    image: postgres
+    image: postgres:17
+    container_name: postgres_db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf        # Подключаем конфигурацию Nginx
+      - ./certs:/etc/nginx/certs                  # Подключаем SSL-сертификаты
+    ports:
+      - "443:443"
+      - "80:80"
+    depends_on:
+      - app
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

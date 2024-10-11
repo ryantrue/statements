@@ -1,69 +1,62 @@
 package config
 
 import (
+	"fmt"
 	"github.com/spf13/viper"
 	"strings"
 )
 
-// Config структура для хранения конфигурации
+// Config объединяет все конфигурационные секции
 type Config struct {
-	Server struct {
-		Host string `mapstructure:"host"`
-		Port int    `mapstructure:"port"`
-	} `mapstructure:"server"`
-
-	Database struct {
-		URL                string `mapstructure:"url"`
-		MaxConnections     int    `mapstructure:"max_connections"`
-		MaxIdleConnections int    `mapstructure:"max_idle_connections"`
-		MigrationsDir      string `mapstructure:"migrations_dir"`
-		DatabaseName       string `mapstructure:"database_name"`
-	} `mapstructure:"database"`
-
-	FileUpload struct {
-		UploadDir string `mapstructure:"upload_dir"`
-		StaticDir string `mapstructure:"static_dir"`
-	} `mapstructure:"file_upload"`
-
-	Logging struct {
-		Level string `mapstructure:"level"`
-	} `mapstructure:"logging"`
-
-	Python struct {
-		Interpreter string `mapstructure:"interpreter"`
-		ScriptPath  string `mapstructure:"script_path"`
-	} `mapstructure:"python"`
-
-	Organization struct {
-		DefaultInn        string `mapstructure:"default_inn"`
-		DefaultName       string `mapstructure:"default_name"`
-		DefaultInnCredit  string `mapstructure:"default_inn_credit"`
-		DefaultNameCredit string `mapstructure:"default_name_credit"`
-	} `mapstructure:"organization"`
+	Server       ServerConfig       `mapstructure:"server"`
+	Database     DatabaseConfig     `mapstructure:"database"`
+	FileUpload   FileUploadConfig   `mapstructure:"file_upload"`
+	Logging      LoggingConfig      `mapstructure:"logging"`
+	Python       PythonConfig       `mapstructure:"python"`
+	Auth         AuthConfig         `mapstructure:"auth"`
+	Organization OrganizationConfig `mapstructure:"organization"`
 }
 
-// LoadConfig загружает конфигурацию с помощью Viper
+// LoadConfig загружает конфигурацию из файла и переменных окружения
 func LoadConfig(configPath string) (*Config, error) {
-	viper.SetConfigFile(configPath)
+	v := initViper(configPath)
 
-	// Префикс для переменных окружения, чтобы они не конфликтовали с другими
-	viper.SetEnvPrefix("APP")
-
-	// Замена символов для переменных окружения (чтобы работали переменные типа APP_SERVER_PORT)
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-
-	// Чтение переменных окружения
-	viper.AutomaticEnv()
-
-	// Чтение из конфигурационного файла
-	if err := viper.ReadInConfig(); err != nil {
-		return nil, err
+	if err := v.ReadInConfig(); err != nil {
+		return nil, fmt.Errorf("failed to read config file: %w", err)
 	}
 
 	var config Config
-	if err := viper.Unmarshal(&config); err != nil {
-		return nil, err
+	if err := v.Unmarshal(&config); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
+	}
+
+	// Можно добавить валидацию параметров здесь
+	if err := validateConfig(&config); err != nil {
+		return nil, fmt.Errorf("config validation failed: %w", err)
 	}
 
 	return &config, nil
+}
+
+// initViper инициализирует Viper с настройками для работы с окружением и конфигурационным файлом
+func initViper(configPath string) *viper.Viper {
+	v := viper.New()
+	v.SetConfigFile(configPath)
+	v.SetEnvPrefix("APP")
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	v.AutomaticEnv()
+	return v
+}
+
+// validateConfig выполняет проверку критических параметров конфигурации
+func validateConfig(config *Config) error {
+	// Пример проверки значений
+	if config.Server.Host == "" {
+		return fmt.Errorf("server host is not set")
+	}
+	if config.Server.Port == 0 {
+		return fmt.Errorf("server port is not set")
+	}
+	// Можно добавить другие проверки для важных параметров
+	return nil
 }

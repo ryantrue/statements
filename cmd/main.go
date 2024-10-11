@@ -6,6 +6,7 @@ import (
 	"os"
 	"statements/internal/config"
 	"statements/internal/database"
+	"statements/internal/middleware"
 	"statements/internal/router"
 )
 
@@ -20,6 +21,12 @@ func startApp() {
 	if err != nil {
 		log.Fatalf("Ошибка загрузки конфигурации: %v", err)
 	}
+
+	// Инициализируем логирование с помощью Zap
+	middleware.InitLogger()
+
+	// Инициализация JWT с секретным ключом
+	middleware.InitJWT(cfg.Auth.JWTSecret)
 
 	// Создание базы данных, если она не существует
 	if err := database.CreateDatabaseIfNotExists(cfg); err != nil {
@@ -46,6 +53,15 @@ func startApp() {
 
 	// Регистрация маршрутов с использованием нового пакета router
 	r := router.RegisterRoutes(cfg)
+
+	// Добавляем CORS middleware
+	r.Use(middleware.CORSMiddleware())
+
+	// Добавляем middleware для обработки ошибок
+	r.Use(middleware.ErrorHandling())
+
+	// Добавляем middleware для JWT аутентификации на защищённые маршруты
+	r.Use(middleware.AuthMiddleware())
 
 	// Запуск сервера
 	address := fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
